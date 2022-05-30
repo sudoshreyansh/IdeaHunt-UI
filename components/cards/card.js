@@ -31,11 +31,10 @@ function Card({ uid, boardID, idea, link, owner, votes, canVote, ownIdea, castVo
                 #{uid + 1}
             </div>
             <div className="mb-10 grow">
-                <pre className="whitespace-pre-line">
+                <pre className="whitespace-pre-line mb-4">
                     {idea}
-
-                    { link === '' || link.slice(0, 4) !== 'http' ? '' : 'Read More: <a href={link} target="_blank"></a>' }
                 </pre>
+                { link === '' || link.slice(0, 4) !== 'http' ? '' : <a href={link} target="_blank" rel="noreferrer" className="underline">Read more here</a> }
             </div>
             <div className="flex items-center">
                 <div className="w-12 h-12 rounded-full bg-stone-500"></div>
@@ -43,7 +42,7 @@ function Card({ uid, boardID, idea, link, owner, votes, canVote, ownIdea, castVo
                     <div className="">{'0x' + owner.slice(2, 8).toUpperCase()}</div>
                     <div className="text-red-600 text-sm">{votes} Votes</div>
                 </div>
-                <i className={`fa-solid fa-heart text-3xl cursor-pointer ${canVote ? 'text-red-600' : 'text-red-800'} relative`} onClick={() => setVoteDialog(true)}>
+                <i className={`fa-solid fa-heart text-3xl cursor-pointer ${canVote && !castVote && !ownIdea ? 'text-red-600' : 'text-red-800'} relative`} onClick={() => setVoteDialog(true)}>
                     {
                         voteDialog ?
                         (

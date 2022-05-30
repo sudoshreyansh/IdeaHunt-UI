@@ -9,7 +9,7 @@ import Board from '../components/board';
 import Link from 'next/link';
 import Advertisement from '../components/advertisement';
 
-export default function () {
+export default function IndexPage () {
     const displayModal = useContext(ModalContext);
     const { contract, signer } = useContext(ContractContext);
     const [ boards, setBoards ] = useState([]);
@@ -31,6 +31,7 @@ export default function () {
             uid: idea.uid.toNumber(),
             boardID: idea.boardID.toNumber(),
             idea: idea.idea,
+            link: idea.link,
             owner: idea.owner,
             votes: idea.votes.toNumber(),
             voted: false

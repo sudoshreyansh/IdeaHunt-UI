@@ -7,7 +7,7 @@ import PrimaryButton from '../components/button/Primary';
 import Loader from '../components/loader';
 import { useRouter } from 'next/router';
 
-export default function () {
+export default function BoardPage () {
     const displayModal = useContext(ModalContext);
     const { contract, signer } = useContext(ContractContext);
     const router = useRouter();
@@ -41,6 +41,7 @@ export default function () {
             uid: idea.uid.toNumber(),
             boardID: idea.boardID.toNumber(),
             idea: idea.idea,
+            link: idea.link,
             owner: idea.owner,
             votes: idea.votes.toNumber(),
             voted: false

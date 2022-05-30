@@ -118,8 +118,8 @@ function IntroModal() {
     }
 
     const IntroFlow = [
-        <IntroContents next={() => setPageIndex(1)} />,
-        <Web3Connect next={updateWeb3Contract} />
+        <IntroContents key="intro-content" next={() => setPageIndex(1)} />,
+        <Web3Connect key="wallet-connect" next={updateWeb3Contract} />
     ]
 
     const contents = IntroFlow[pageIndex];

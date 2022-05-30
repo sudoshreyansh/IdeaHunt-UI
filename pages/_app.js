@@ -11,7 +11,7 @@ function MyApp({ Component, pageProps }) {
     return (
         <>
             <Head>
-                <script src="https://kit.fontawesome.com/381c802c4a.js" crossOrigin="anonymous"></script>
+                <script async src="https://kit.fontawesome.com/381c802c4a.js" crossOrigin="anonymous"></script>
             </Head>
             <ContractProvider>
                 <TransactionProvider>
