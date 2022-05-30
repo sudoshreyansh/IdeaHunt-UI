@@ -1,7 +1,7 @@
 export async function checkEthereumConnection() {
     try {
         const provider = window.ethereum;
-        if ( provider ) {
+        if ( provider && provider.isConnected() ) {
             const accounts = await provider.request({ method: 'eth_accounts' });
             const chainID = await provider.request({ method: 'eth_chainId' });
 
