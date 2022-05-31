@@ -2,7 +2,6 @@ import Card from './card'
 import { useState } from 'react';
 
 function Cards({ cards, canVote, address, minimised, missingText }) {
-    console.log(cards);
     const [collapse, setCollapse] = useState(minimised ?? true);
 
     cards = cards.reverse();

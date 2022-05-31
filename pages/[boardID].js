@@ -5,6 +5,7 @@ import ContractContext from '../contexts/Contract'
 import Cards from '../components/cards'
 import PrimaryButton from '../components/button/Primary';
 import Loader from '../components/loader';
+import AdminSettings from '../components/admin';
 import { useRouter } from 'next/router';
 
 export default function BoardPage () {
@@ -81,11 +82,42 @@ export default function BoardPage () {
                 showLoading ?
                 <Loader className="w-16 h-16 mx-auto my-10" /> : 
                 <>
-                    <div className="font-bold text-3xl mb-3">
-                        {board.name}
+                    <div className="font-bold text-3xl mb-3 flex items-center justify-between pr-2">
+                        <div className="">
+                            {board.name}
+                        </div>
+                        <AdminSettings board={board} boardID={boardID} setBoard={setBoard} />
                     </div>
                     <div className="mb-4">
-                        {board.description}
+                        {board.description}<br /><br />
+                        {
+                            board.open ?
+                            (
+                                <>
+                                    {
+                                        canWrite ?
+                                        <>
+                                            <i className="fa-solid fa-circle-check text-green-600 mr-2"></i> Add new ideas
+                                        </> :
+                                        <>
+                                            <i className="fa-solid fa-circle-xmark text-red-600 mr-2"></i> Add new ideas
+                                        </>
+                                    }<br />
+                                    {
+                                        canVote ?
+                                        <>
+                                            <i className="fa-solid fa-circle-check text-green-600 mr-2"></i> Vote on ideas
+                                        </> :
+                                        <>
+                                            <i className="fa-solid fa-circle-xmark text-red-600 mr-2"></i> Vote on ideas
+                                        </>
+                                    }
+                                </>
+                            ) :
+                            <>
+                                <i className="fa-solid fa-circle-exclamation text-blue-400"></i> This board has been closed by the admin.
+                            </>
+                        }
                     </div>
                     {
                         canWrite ?

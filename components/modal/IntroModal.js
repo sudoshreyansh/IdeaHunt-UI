@@ -36,13 +36,15 @@ function Web3Connect({ next }) {
             const _wallet = {};
             if ( window.ethereum ) {
                 _wallet.provider = window.ethereum;
+                _wallet.chain = await _wallet.provider.request({ method: 'eth_chainId' });
                 const accounts = await _wallet.provider.request({ method: 'eth_requestAccounts' });
                 _wallet.account = accounts[0];
-                _wallet.chain = await _wallet.provider.request({ method: 'eth_chainId' });
 
                 setWallet(_wallet);
             }
-        } catch (e) {}
+        } catch (e) {
+            console.log(e);
+        }
     }
 
     useEffect(() => {

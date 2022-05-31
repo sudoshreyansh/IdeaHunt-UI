@@ -2,6 +2,8 @@ import { useReducer } from 'react';
 import TransactionContext from '../contexts/Transaction';
 import Notification from '../components/notification';
 
+const processedIDs = new Set();
+
 function TransactionProvider({ children }) {
     const [notifications, setTransactions] = useReducer(reducer, {});
 
@@ -13,6 +15,9 @@ function TransactionProvider({ children }) {
         }
 
         if ( action.promise ) {
+            if ( processedIDs.has(action.id) ) return state;
+            processedIDs.add(action.id);
+
             action.promise.then(tx => {
                 setTransactions({
                     id: action.id,
@@ -21,17 +26,20 @@ function TransactionProvider({ children }) {
                 action.next();
                 return tx.wait();
             }).then(() => {
-               setTransactions({
-                   id: Date.now(),
-                   text: action.successText
-               });
+                processedIDs.delete(action.id);
+                action.success ? action.success() : 0;
+                setTransactions({
+                    id: Date.now(),
+                    text: action.successText
+                });
            }).catch(e => {
-               console.log(e);
-               action.next();
-               setTransactions({
-                   id: Date.now(),
-                   text: action.failureText
-               });
+                processedIDs.delete(action.id);
+                action.next();
+                action.failure ? action.failure() : 0;
+                setTransactions({
+                    id: Date.now(),
+                    text: action.failureText
+                });
            })
 
            return state;

@@ -15,7 +15,7 @@ function HunterTokenModal() {
     function mintHunterToken() {
         if ( minting ) return;
         setMinting(true);
-        const tx = contract.mintHunterToken({ gasLimit: 300000 });
+        const tx = contract.mintHunterToken({ gasLimit: 300000, value: ethers.utils.parseEther("0.01") });
         addTransaction({
             id: Date.now(),
             text: 'Your Hunter Token is being minted. It may take a few minutes.',
@@ -51,7 +51,7 @@ function HunterTokenModal() {
                     </div>
                 </div>
             </div>
-            <PrimaryButton value="Mint Hunter Token" deactivated={minting} onClick={mintHunterToken} />
+            <PrimaryButton value="Mint Hunter Token [0.01 ETH]" deactivated={minting} onClick={mintHunterToken} />
             <SecondaryButton value="Later" onClick={() => displayModal({name:'NO_MODAL'})} />
         </BaseModal>
     )

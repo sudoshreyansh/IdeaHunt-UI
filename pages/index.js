@@ -56,7 +56,6 @@ export default function IndexPage () {
     }
 
     useEffect(() => {
-        console.log(contract);
         if ( contract === undefined ) return;
 
         if ( contract === false ) {

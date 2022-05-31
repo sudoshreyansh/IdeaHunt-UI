@@ -42,7 +42,7 @@ function Card({ uid, boardID, idea, link, owner, votes, canVote, ownIdea, castVo
                     <div className="">{'0x' + owner.slice(2, 8).toUpperCase()}</div>
                     <div className="text-red-600 text-sm">{votes} Votes</div>
                 </div>
-                <i className={`fa-solid fa-heart text-3xl cursor-pointer ${canVote && !castVote && !ownIdea ? 'text-red-600' : 'text-red-800'} relative`} onClick={() => setVoteDialog(true)}>
+                <i className={`fa-solid fa-heart text-3xl cursor-pointer ${canVote && !castVote && !ownIdea ? 'text-red-600' : 'text-red-800'} relative`} onClick={() => setVoteDialog(!voteDialog)}>
                     {
                         voteDialog ?
                         (
@@ -52,15 +52,15 @@ function Card({ uid, boardID, idea, link, owner, votes, canVote, ownIdea, castVo
                                     Do you want to vote for this idea?
                                 </div>
                                 <div className="flex text-sm mt-2">
-                                    <PrimaryButton value="Yes" deactivated={casting} onClick={() => onVote(uid)} />
+                                    <PrimaryButton value="Yes" deactivated={casting} onClick={onVote} />
                                     <SecondaryButton value="No" onClick={() => setVoteDialog(false)} />
                                 </div>
                             </div> :
                             <div className={`bg-white px-4 py-2 -left-2/3 top-full border-2 border-solid border-gray-600 bg-white z-10 text-black font-medium text-base w-60 rounded ${voteDialog ? 'absolute' : 'hidden'}`} onClick={e => e.stopPropagation()}>
                                 <div>
                                     {
-                                        ownIdea ? 'You cannot vote on your own idea.' : (
-                                            castVote ? 'You can vote only once on an idea.' : 'You can\'t vote in this board.'
+                                        !canVote ? 'You cannot vote in this board.' : (
+                                            castVote ? 'You can vote only once on an idea.' : 'You cannot vote on your own idea.'
                                         )
                                     }
                                 </div>
