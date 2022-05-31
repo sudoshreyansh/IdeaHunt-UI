@@ -30,8 +30,8 @@ function NewBoardForm({ onSubmit, onCancel }) {
         setPage(1);
     }
 
-    function submit() {
-        if ( isNaN(parseFloat(bounty)) || parseFloat(bounty) < 0.0001 || parseFloat(bounty) > 10  ) return setBountyError(true);
+    function submit() { 
+        if ( isNaN(parseFloat(bounty)) || parseFloat(bounty) > 10  ) return setBountyError(true);
 
         if ( submitting ) return;
         setSubmitting(true);
@@ -106,7 +106,7 @@ function NewBoardForm({ onSubmit, onCancel }) {
                 <select className="border-stone-600 border-solid border py-2 px-2 mb-6 w-full block" value={proposalToken} onChange={e => setProposalToken(e.target.value)}>
                     {
                         Object.keys(assets).map(asset => (
-                            <option value={asset}>{assets[asset]} {asset != defaultTokenGate ? '- ' + asset : ''}</option>
+                            <option key={asset} value={asset}>{assets[asset]} {asset != defaultTokenGate ? '- ' + asset : ''}</option>
                         ))
                     }
                 </select>
@@ -115,7 +115,7 @@ function NewBoardForm({ onSubmit, onCancel }) {
                 <select className="border-stone-600 border-solid border py-2 px-2 mb-6 w-full block" value={voteToken} onChange={e => setVoteToken(e.target.value)}>
                     {
                         Object.keys(assets).map(asset => (
-                            <option value={asset}>{assets[asset]} {asset != defaultTokenGate ? '- ' + asset : ''}</option>
+                            <option key={asset} value={asset}>{assets[asset]} {asset != defaultTokenGate ? '- ' + asset : ''}</option>
                         ))
                     }
                 </select>
@@ -125,7 +125,7 @@ function NewBoardForm({ onSubmit, onCancel }) {
                 <div className='text-sm text-red-600 font-semibold mb-6'>
                 {
                     bountyError ?
-                    "Bounty should be valid decimal between 0.0001 and 10." :
+                    "Bounty should be valid decimal less than 10." :
                     <></>
                 }
                 </div>
@@ -155,7 +155,7 @@ function NewBoardModal() {
         addTransaction({
             id: Date.now(),
             text: `${form[0]} is being added. It may take a few minutes.`,
-            successText: `${form[0]} is added. Please refresh to continue.`,
+            successText: `${form[0]} is added.`,
             failureText: `There was a problem with adding ${form[0]}. Please try again.`,
             promise: tx,
             next: () => displayModal({name: 'NO_MODAL'}),

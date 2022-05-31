@@ -16,8 +16,6 @@ function Cards({ cards, canVote, address, minimised, missingText }) {
         )
     }
 
-    console.log(cards);
-
     return (
         <div className="md:grid grid-cols-3 gap-4 pt-5 pb-12">
             {
@@ -30,7 +28,7 @@ function Cards({ cards, canVote, address, minimised, missingText }) {
                             link={card.link}
                             votes={card.votes}
                             owner={card.owner}
-                            key={card.uid}
+                            key={`${card.boardID}-${card.uid}`}
                             canVote={canVote}
                             ownIdea={card.owner === address}
                             castVote={card.voted}

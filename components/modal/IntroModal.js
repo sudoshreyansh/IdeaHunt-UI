@@ -54,7 +54,7 @@ function IntroContents_Gating({ next, back }) {
                 Gating
             </div>
             <div className="mb-10 text-sm">
-                IdeaHunt has it's own NFT, Hunter NFT. Gating can be done through either the Hunter NFT or any other NFT, the Board Admin wants, provided it's available on Ethereum Rinkeby network for on-chain verification.
+                IdeaHunt has it&apos;s own NFT, Hunter NFT. Gating can be done through either the Hunter NFT or any other NFT, the Board Admin wants, provided it&apos;s available on Ethereum Rinkeby network for on-chain verification.
             </div>
             <div className="mb-10 flex justify-between px-40 text-stone-800">
                 <div className="text-center">

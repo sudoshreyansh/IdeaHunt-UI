@@ -33,6 +33,7 @@ function TransactionProvider({ children }) {
                     text: action.successText
                 });
            }).catch(e => {
+               console.log(e);
                 processedIDs.delete(action.id);
                 action.next();
                 action.failure ? action.failure() : 0;

@@ -73,8 +73,7 @@ export default function BoardPage () {
     }
 
     function boardClosed(_boardID) {
-        console.log(_boardID.toNumber(), parseInt(boardID));
-        if ( _boardID.toNumber() != parseInt(boardID) ) closeBoard();
+        if ( _boardID.toNumber() == parseInt(boardID) ) closeBoard();
     }
 
     async function addIdea() {
