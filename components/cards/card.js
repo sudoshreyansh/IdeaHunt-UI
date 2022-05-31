@@ -18,7 +18,7 @@ function Card({ uid, boardID, idea, link, owner, votes, canVote, ownIdea, castVo
         addTransaction({
             id: Date.now(),
             text: 'Your vote is being cast. It may take a few minutes.',
-            successText: 'Your vote has been cast. Please refresh to continue.',
+            successText: 'Your vote has been cast.',
             failureText: 'There was a problem with casting your vote. Please try again.',
             promise: tx,
             next: () => {setVoteDialog(false); setCasting(false)},
