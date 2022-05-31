@@ -4,9 +4,11 @@ import { useState } from 'react';
 function Cards({ cards, canVote, address, minimised, missingText }) {
     const [collapse, setCollapse] = useState(minimised ?? true);
 
-    cards = cards.reverse();
-    if ( collapse ) cards = cards.slice(0, 6);
-    if ( cards.length == 0 ) {
+    let presentCards = [...cards];
+    presentCards.reverse();
+    presentCards.sort((cardA, cardB) => cardB.votes - cardA.votes);
+    if ( collapse ) presentCards = presentCards.slice(0, 6);
+    if ( presentCards.length == 0 ) {
         return (
             <div className="text-center my-20">
                 {missingText}
@@ -14,10 +16,12 @@ function Cards({ cards, canVote, address, minimised, missingText }) {
         )
     }
 
+    console.log(cards);
+
     return (
         <div className="md:grid grid-cols-3 gap-4 pt-5 pb-12">
             {
-                cards
+                presentCards
                     .map(card => 
                         <Card
                             uid={card.uid}

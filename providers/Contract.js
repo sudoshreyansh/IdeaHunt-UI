@@ -4,9 +4,13 @@ import abi from '../config/abi.json'
 import address from '../config/address'
 import { useReducer, useEffect } from 'react'
 import { checkEthereumConnection } from '../utils/utils'
+import { useRouter } from 'next/router';
 
 const listeners = {
-    'NewIdeaEvent': false
+    'NewIdeaEvent': false,
+    'NewVoteEvent': false,
+    'NewBoardEvent': false,
+    'CloseBoardEvent': false
 }
 
 function addListener(event, listener) {

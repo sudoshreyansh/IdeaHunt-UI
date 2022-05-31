@@ -7,6 +7,7 @@ import PrimaryButton from '../components/button/Primary';
 import Loader from '../components/loader';
 import AdminSettings from '../components/admin';
 import { useRouter } from 'next/router';
+import { ethers } from 'ethers';
 
 export default function BoardPage () {
     const displayModal = useContext(ModalContext);
@@ -20,16 +21,59 @@ export default function BoardPage () {
     const [ showLoading, setShowLoading ] = useState(true);
     const [address, setAddress] = useState('');
 
+    let bountyWinnerID = -1;
+    if ( !board.open && board.bounty && board.bounty.toNumber() > 0 && ideas.length() > 0 ) {
+        bountyWinnerID = 0;
+        ideas.forEach((idea, i) => {
+            if ( idea.votes > ideas[bountyWinnerID].votes ) bountyWinnerID = i;
+        })
+    }
+
     function ideaAdded(_uid, _boardID, _owner, _idea, _link) {
-        setIdeas([...ideas, {
-            uid: _uid,
-            boardID: _boardID,
-            owner: _owner,
-            idea: _idea,
-            link: _link,
-            votes: 0,
-            voted: false
-        }])
+        if ( _boardID.toNumber() != parseInt(boardID) ) return;
+        setIdeas((lastIdeas) => {
+            if (
+                lastIdeas.some(_idea => _idea.uid === _uid.toNumber())
+            ) {
+                return lastIdeas;
+            } else {
+                return [...lastIdeas, {
+                    uid: _uid.toNumber(),
+                    boardID: _boardID.toNumber(),
+                    owner: _owner,
+                    idea: _idea,
+                    link: _link,
+                    votes: 0,
+                    voted: false
+                }];
+            }
+        })
+    }
+
+    function ideaVoted(_uid, _boardID, _voter, _votes) {
+        if ( _boardID.toNumber() != parseInt(boardID) ) return;
+        setIdeas((lastIdeas) => {
+            let index = -1;
+            if (
+                lastIdeas.some((_idea, i) => {
+                    if ( _idea.uid === _uid.toNumber() ) {
+                        index = i;
+                        return true;
+                    }
+                    return false;
+                })
+            ) {
+                const newIdeas = [...lastIdeas];
+                newIdeas[index].votes = _votes.toNumber();
+                newIdeas[index].voted = _voter === address;
+                return newIdeas;
+            }
+            return lastIdeas;
+        });
+    }
+
+    function boardClosed(_boardID) {
+        if ( _boardID.toNumber() != parseInt(boardID) ) closeBoard();
     }
 
     async function addIdea() {
@@ -40,15 +84,23 @@ export default function BoardPage () {
     }
 
     function closeBoard() {
-        const _board = {...board};
-        _board.open = false;
-        setBoard(_board);
-        canWrite(false);
-        canVote(false);
+        setBoard((lastBoard) => {
+            if ( !lastBoard.open ) return lastBoard;
+
+            const _board = {...lastBoard};
+            _board.open = false;
+            setCanWrite(false);
+            setCanVote(false);
+
+            return _board;
+        });
     }
 
     async function fetchDetails() {
-        addListener(ideaAdded);
+        addListener('NewIdeaEvent', ideaAdded);
+        addListener('CloseBoardEvent', boardClosed);
+        addListener('NewVoteEvent', ideaVoted);
+
         const _boards = await contract.getBoards();
         const _board = _boards[boardID];
         const _ideas = await contract.getIdeas(boardID);
@@ -66,7 +118,7 @@ export default function BoardPage () {
             link: idea.link,
             owner: idea.owner,
             votes: idea.votes.toNumber(),
-            voted: false
+            voted: idea.voted
         })))
 
         setBoard({
@@ -75,7 +127,8 @@ export default function BoardPage () {
             voterGateToken: _board.voterGateToken,
             writerGateToken: _board.writerGateToken,
             admin: _board.admin,
-            open: _board.open
+            open: _board.open,
+            bounty: _board.bounty
         })
 
         setCanWrite(_canWrite);
@@ -121,7 +174,7 @@ export default function BoardPage () {
                                             <i className="fa-solid fa-circle-check text-green-600 mr-2"></i> Add new ideas
                                         </> :
                                         <>
-                                            <i className="fa-solid fa-circle-xmark text-red-600 mr-2"></i> Add new ideas
+                                            <i className="fa-solid fa-circle-xmark text-red-600 mr-2"></i> Add new ideas {board.writerGateToken === ethers.constants.AddressZero ? '(Hunters only)' : ''}
                                         </>
                                     }<br />
                                     {
@@ -130,13 +183,27 @@ export default function BoardPage () {
                                             <i className="fa-solid fa-circle-check text-green-600 mr-2"></i> Vote on ideas
                                         </> :
                                         <>
-                                            <i className="fa-solid fa-circle-xmark text-red-600 mr-2"></i> Vote on ideas
+                                            <i className="fa-solid fa-circle-xmark text-red-600 mr-2"></i> Vote on ideas {board.voterGateToken === ethers.constants.AddressZero ? '(Hunters only)' : ''}
                                         </>
+                                    }
+                                    {
+                                        board.bounty.toNumber() > 0 ?
+                                        <>
+                                            <i className="fa-solid fa-circle-check text-green-600 mr-2"></i> Best idea bounty - {ethers.utils.formatEther(board.bounty)} ETH
+                                        </> :
+                                        <></>
                                     }
                                 </>
                             ) :
                             <>
                                 <i className="fa-solid fa-circle-exclamation text-blue-400"></i> This board has been closed by the admin.
+                                {
+                                    bountyWinnerID > -1 ?
+                                    <>
+                                        <i className="fa-solid fa-circle-check text-green-600 mr-2"></i> {ethers.utils.formatEther(board.bounty)} ETH Bounty Winner - Idea #{bountyWinnerID + 1}
+                                    </> :
+                                    <></>
+                                }
                             </>
                         }
                     </div>

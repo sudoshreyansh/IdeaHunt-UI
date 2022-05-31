@@ -5,6 +5,7 @@ import ModalContext from '../../contexts/Modal';
 import PrimaryButton from '../button/Primary';
 import SecondaryButton from '../button/Secondary';
 import BaseModal from './BaseModal'
+import { ethers } from 'ethers';
 
 function HunterTokenModal() {
     const displayModal = useContext(ModalContext);

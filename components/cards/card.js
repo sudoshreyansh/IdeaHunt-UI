@@ -21,7 +21,7 @@ function Card({ uid, boardID, idea, link, owner, votes, canVote, ownIdea, castVo
             successText: 'Your vote has been cast. Please refresh to continue.',
             failureText: 'There was a problem with casting your vote. Please try again.',
             promise: tx,
-            next: () => setVoteDialog(false),
+            next: () => {setVoteDialog(false); setCasting(false)},
         })
     }
 

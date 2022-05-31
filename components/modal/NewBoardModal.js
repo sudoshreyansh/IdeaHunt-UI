@@ -25,6 +25,7 @@ function NewBoardForm({ onSubmit, onCancel }) {
             description,
             proposalToken === '' ? defaultTokenGate : proposalToken,
             voteToken === '' ? defaultTokenGate : voteToken,
+            0
         ]);
     }
 
