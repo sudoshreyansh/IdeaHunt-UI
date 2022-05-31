@@ -3,25 +3,107 @@ import PrimaryButton from '../button/Primary';
 import ModalContext from '../../contexts/Modal';
 import { useContext, useEffect, useState } from 'react';
 import ContractContext from '../../contexts/Contract';
+import SecondaryButton from '../button/Secondary';
 
-function IntroContents({ next }) {
+function IntroContents_Intro({ next }) {
     return (
         <>
-            <div className="font-bold mb-5 text-2xl">
-                Hold Up!
+            <div className="font-bold mb-2 text-2xl">
+                IdeaHunt
             </div>
-            <div className="font-bold mb-2 text-xl">
-                A word about IdeaHunt
+            <div className="mb-10 text-sm">
+                IdeaHunt is a place for people around the world to come together, share ideas and encourage those with great ideas. It also allows bounties, NFT Gating and much more!
             </div>
-            <div className="mb-6 text-sm">
-                <i className="fa-solid fa-circle-check text-green-700 mr-2"></i> Share and vote on ideas on the Boards.<br />
-                <i className="fa-solid fa-circle-check text-green-700 mr-2"></i> Create Idea Boards for different topics and purposes.<br />
-                <i className="fa-solid fa-circle-check text-green-700 mr-2"></i> Restrict access to Boards using in-house Hunter NFT or any external NFT.<br />
-                <i className="fa-solid fa-circle-check text-green-700 mr-2"></i> Add more detailed ideas through external links.<br />
-                <i className="fa-solid fa-circle-check text-green-700 mr-2"></i> Bounty Boards to encourage ideas with a Prize (Upcoming)<br />
+            <div className="mb-10 flex justify-between px-24 text-stone-800">
+                <div className="text-center">
+                    <div className='mb-4'>
+                        <i className="fa-solid fa-clipboard-list text-6xl"></i>
+                    </div>
+                    <div className='font-semibold'>
+                        Create Idea Boards
+                    </div>
+                </div>
+                <div className="text-center">
+                    <div className='mb-4'>
+                        <i className="fa-solid fa-pencil text-6xl"></i>
+                    </div>
+                    <div className='font-semibold'>
+                        Add Ideas on Boards
+                    </div>
+                </div>
+                <div className="text-center">
+                    <div className='mb-4'>
+                        <i className="fa-solid fa-square-poll-vertical text-6xl"></i>
+                    </div>
+                    <div className='font-semibold'>
+                        Vote Them
+                    </div>
+                </div>
             </div>
             <div className="text-sm">
-                <PrimaryButton value="Continue" onClick={next} />
+                <PrimaryButton value="Next" onClick={next} />
+            </div>
+        </>
+    )
+}
+
+function IntroContents_Gating({ next, back }) {
+    return (
+        <>
+            <div className="font-bold mb-2 text-2xl">
+                Gating
+            </div>
+            <div className="mb-10 text-sm">
+                IdeaHunt has it's own NFT, Hunter NFT. Gating can be done through either the Hunter NFT or any other NFT, the Board Admin wants, provided it's available on Ethereum Rinkeby network for on-chain verification.
+            </div>
+            <div className="mb-10 flex justify-between px-40 text-stone-800">
+                <div className="text-center">
+                    <div className='mb-8'>
+                        <img src="/nft-display.png" className="w-40 pt-4" />
+                    </div>
+                    <div className='font-semibold'>
+                        Hunter NFT
+                    </div>
+                </div>
+                <div className="text-center">
+                    <div className='mb-4'>
+                        <img src='https://imageio.forbes.com/specials-images/imageserve/6170e01f8d7639b95a7f2eeb/Sotheby-s-NFT-Natively-Digital-1-2-sale-Bored-Ape-Yacht-Club--8817-by-Yuga-Labs/0x0.png?format=png&width=960' className='w-40' />
+                    </div>
+                    <div className='font-semibold'>
+                        3rd Party NFT
+                    </div>
+                </div>
+            </div>
+            <div className="text-sm">
+                <PrimaryButton value="Next" onClick={next} />
+                <SecondaryButton value="Back" onClick={back} />
+            </div>
+        </>
+    )
+}
+
+function IntroContents_Hunter({ next, back }) {
+    return (
+        <>
+            <div className="font-bold mb-2 text-2xl">
+                Hunter Token
+            </div>
+            <div className="mb-10 text-sm">
+                Hunter NFT is required to create new Boards and is the default Gating Token for adding ideas and voting when creating new Idea Boards.
+            </div>
+            <div className="mb-10 flex justify-center text-stone-800">
+                <div className="text-center">
+                    <div className='mb-6'>
+                        <img src="/nft-display.png" className="w-40" />
+                    </div>
+                    <div className='font-semibold'>
+                        Hunter NFT
+                    </div>
+                </div>
+            </div>
+            <div className="text-sm">
+                <PrimaryButton value="Next" onClick={next} />
+                <SecondaryButton value="Back" onClick={back} />
             </div>
         </>
     )
@@ -120,8 +202,10 @@ function IntroModal() {
     }
 
     const IntroFlow = [
-        <IntroContents key="intro-content" next={() => setPageIndex(1)} />,
-        <Web3Connect key="wallet-connect" next={updateWeb3Contract} />
+        <IntroContents_Intro key="intro-content" next={() => setPageIndex(1)} />,
+        <IntroContents_Gating key="intro-content" next={() => setPageIndex(2)} back={() => setPageIndex(0)} />,
+        <IntroContents_Hunter key="intro-content" next={() => setPageIndex(3)} back={() => setPageIndex(1)} />,
+        <Web3Connect key="wallet-connect" next={updateWeb3Contract} back={() => setPageIndex(2)} />
     ]
 
     const contents = IntroFlow[pageIndex];

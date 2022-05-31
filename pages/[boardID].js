@@ -22,7 +22,7 @@ export default function BoardPage () {
     const [address, setAddress] = useState('');
 
     let bountyWinnerID = -1;
-    if ( !board.open && board.bounty && board.bounty.toNumber() > 0 && ideas.length() > 0 ) {
+    if ( !board.open && board.bounty && board.bounty.toString() != '0' && ideas.length > 0 ) {
         bountyWinnerID = 0;
         ideas.forEach((idea, i) => {
             if ( idea.votes > ideas[bountyWinnerID].votes ) bountyWinnerID = i;
@@ -73,6 +73,7 @@ export default function BoardPage () {
     }
 
     function boardClosed(_boardID) {
+        console.log(_boardID.toNumber(), parseInt(boardID));
         if ( _boardID.toNumber() != parseInt(boardID) ) closeBoard();
     }
 
@@ -185,21 +186,22 @@ export default function BoardPage () {
                                         <>
                                             <i className="fa-solid fa-circle-xmark text-red-600 mr-2"></i> Vote on ideas {board.voterGateToken === ethers.constants.AddressZero ? '(Hunters only)' : ''}
                                         </>
-                                    }
+                                    }<br />
                                     {
-                                        board.bounty.toNumber() > 0 ?
+                                        board.bounty.toString() != '0' ?
                                         <>
-                                            <i className="fa-solid fa-circle-check text-green-600 mr-2"></i> Best idea bounty - {ethers.utils.formatEther(board.bounty)} ETH
+                                            <i className="fa-solid fa-circle-check text-green-600 mr-2"></i> Best idea bounty: {ethers.utils.formatEther(board.bounty)} ETH
                                         </> :
                                         <></>
                                     }
                                 </>
                             ) :
                             <>
-                                <i className="fa-solid fa-circle-exclamation text-blue-400"></i> This board has been closed by the admin.
+                                <i className="fa-solid fa-circle-exclamation text-blue-400 mr-2"></i> This board has been closed by the admin.
                                 {
                                     bountyWinnerID > -1 ?
                                     <>
+                                        <br />
                                         <i className="fa-solid fa-circle-check text-green-600 mr-2"></i> {ethers.utils.formatEther(board.bounty)} ETH Bounty Winner - Idea #{bountyWinnerID + 1}
                                     </> :
                                     <></>
