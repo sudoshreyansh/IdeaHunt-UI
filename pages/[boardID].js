@@ -10,7 +10,7 @@ import { useRouter } from 'next/router';
 
 export default function BoardPage () {
     const displayModal = useContext(ModalContext);
-    const { contract, signer } = useContext(ContractContext);
+    const { contract, signer, addListener } = useContext(ContractContext);
     const router = useRouter();
     const { boardID } = router.query;
     const [ board, setBoard ] = useState({});
@@ -20,6 +20,18 @@ export default function BoardPage () {
     const [ showLoading, setShowLoading ] = useState(true);
     const [address, setAddress] = useState('');
 
+    function ideaAdded(_uid, _boardID, _owner, _idea, _link) {
+        setIdeas([...ideas, {
+            uid: _uid,
+            boardID: _boardID,
+            owner: _owner,
+            idea: _idea,
+            link: _link,
+            votes: 0,
+            voted: false
+        }])
+    }
+
     async function addIdea() {
         displayModal({
             name: 'NEW_IDEA_MODAL',
@@ -27,7 +39,16 @@ export default function BoardPage () {
         })
     }
 
+    function closeBoard() {
+        const _board = {...board};
+        _board.open = false;
+        setBoard(_board);
+        canWrite(false);
+        canVote(false);
+    }
+
     async function fetchDetails() {
+        addListener(ideaAdded);
         const _boards = await contract.getBoards();
         const _board = _boards[boardID];
         const _ideas = await contract.getIdeas(boardID);
@@ -86,7 +107,7 @@ export default function BoardPage () {
                         <div className="">
                             {board.name}
                         </div>
-                        <AdminSettings board={board} boardID={boardID} setBoard={setBoard} />
+                        <AdminSettings board={board} boardID={boardID} closeBoard={closeBoard} />
                     </div>
                     <div className="mb-4">
                         {board.description}<br /><br />

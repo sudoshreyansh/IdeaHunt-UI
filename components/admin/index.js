@@ -4,7 +4,7 @@ import SecondaryButton from "../button/Secondary";
 import ContractContext from "../../contexts/Contract";
 import TransactionContext from "../../contexts/Transaction";
 
-function AdminSettings({ boardID, board, setBoard }) {
+function AdminSettings({ boardID, board, closeBoard }) {
     const [ showAdmin, setShowAdmin ] = useState(false);
     const [ loading, setLoading ] = useState(false);
     const { contract } = useContext(ContractContext);
@@ -22,11 +22,7 @@ function AdminSettings({ boardID, board, setBoard }) {
             failureText: `${board.name} could not be closed. Please try again.`,
             promise: tx,
             next: () => setShowAdmin(false),
-            success: () => {
-                const _board = {...board};
-                _board.open = false;
-                setBoard(_board);
-            },
+            success: () => closeBoard(),
             failure: () => setLoading(false)
         })
     }
